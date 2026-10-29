@@ -13,3 +13,4 @@
 - Link do Clique Agenda: `cliqueagenda.app`.
 - Auditoria pré-deploy: liberado com ressalvas. Primeiro push para `github.com/fabriciomendeslaura-byte/NOVO-SITE-OMNI.IA-ATUALIZADO` (commit `499764e`).
 - No ar na Vercel: https://siteomiiaatualizado.vercel.app. Conferido em produção (páginas, headers, console, CORS do formulário).
+- Domínio www.omniiabr.tech apontado para o projeto novo. Hero no celular: mascote sempre abaixo do botão (`16ce0e0`).

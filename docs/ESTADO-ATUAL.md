@@ -2,7 +2,7 @@
 
 **Última sessão:** 29/10/2026
 **Pasta:** `C:\Users\Usuário\Desktop\PASTA PARA SITE NOVO OMNI.IA`
-**Status:** no GitHub (`github.com/fabriciomendeslaura-byte/NOVO-SITE-OMNI.IA-ATUALIZADO`, branch `main`). **No ar na Vercel:** https://siteomiiaatualizado.vercel.app — falta apontar omniiabr.tech.
+**Status:** EM PRODUÇÃO em https://www.omniiabr.tech (Vercel, repo `NOVO-SITE-OMNI.IA-ATUALIZADO`). Projeto Vercel antigo = rollback.
 
 ## Próximo passo (quando voltar)
 
