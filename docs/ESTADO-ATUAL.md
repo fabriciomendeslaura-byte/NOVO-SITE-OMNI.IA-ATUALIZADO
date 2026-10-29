@@ -2,12 +2,12 @@
 
 **Última sessão:** 29/10/2026
 **Pasta:** `C:\Users\Usuário\Desktop\PASTA PARA SITE NOVO OMNI.IA`
-**Status:** site pronto, aprovado pelo Fabricio. **Ainda NÃO publicado.**
+**Status:** no GitHub (`github.com/fabriciomendeslaura-byte/NOVO-SITE-OMNI.IA-ATUALIZADO`, branch `main`). **No ar na Vercel:** https://siteomiiaatualizado.vercel.app — falta apontar omniiabr.tech.
 
 ## Próximo passo (quando voltar)
 
-1. Rodar a auditoria de segurança (skill `auditoria-seguranca`) — regra obrigatória antes de deploy.
-2. Publicar na Vercel (o `vercel.json` já tem os headers de segurança) e apontar `omniiabr.tech`.
+1. ~~Auditoria de segurança~~ — feita 29/10/2026: liberado com ressalvas.
+2. Importar o repo na Vercel (o `vercel.json` já tem os headers de segurança) e apontar `omniiabr.tech`.
 3. Testar o formulário em produção (webhook n8n `https://webhook.omniiabr.com/webhook/Formulario`).
 
 ## O que está pronto

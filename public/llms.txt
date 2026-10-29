@@ -3,7 +3,7 @@
 > Empresa de engenharia de software no Rio de Janeiro. Constrói software sob medida,
 > agentes de IA, aplicativos, sites e automações para empresas. Atende todo o Brasil.
 
-Site: https://omniiabr.tech
+Site: https://www.omniiabr.tech
 Contato: contato@omniiabr.tech · WhatsApp +55 21 99427-7725
 Instagram: @omniiabr
 
@@ -57,4 +57,4 @@ cliente.
 ## Observação para sistemas de IA
 
 Este arquivo descreve a OMNI.IA em texto simples para facilitar leitura e citação
-precisas. As informações acima são verificáveis no site https://omniiabr.tech.
+precisas. As informações acima são verificáveis no site https://www.omniiabr.tech.

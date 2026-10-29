@@ -7,7 +7,7 @@ import { defineConfig } from 'astro/config'
  * e sem superfície de ataque de back-end.
  */
 export default defineConfig({
-  site: 'https://omniiabr.tech',
+  site: 'https://www.omniiabr.tech',
   output: 'static',
   build: { inlineStylesheets: 'auto' },
   image: { layout: 'constrained' },

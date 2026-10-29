@@ -11,3 +11,5 @@
 - Removidos a pedido: símbolo do logo na nav, cena "Rio de Janeiro", banner do OmniZap.
 - Revisão de espaçamento desktop + celular; correção de cards de produto travados e de textos empilhados com animação desligada.
 - Link do Clique Agenda: `cliqueagenda.app`.
+- Auditoria pré-deploy: liberado com ressalvas. Primeiro push para `github.com/fabriciomendeslaura-byte/NOVO-SITE-OMNI.IA-ATUALIZADO` (commit `499764e`).
+- No ar na Vercel: https://siteomiiaatualizado.vercel.app. Conferido em produção (páginas, headers, console, CORS do formulário).
