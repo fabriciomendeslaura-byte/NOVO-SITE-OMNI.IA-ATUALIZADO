@@ -1,0 +1,226 @@
+---
+import { NAVEGACAO } from '../content/site'
+---
+
+<header class="nav" data-nav>
+  <div class="interno container-largo">
+    <a href="/#topo" class="marca" aria-label="OMNI.IA — início">
+      <span>OMNI<b>.IA</b></span>
+    </a>
+
+    <nav aria-label="Principal">
+      <ul class="links">
+        {NAVEGACAO.map((item) => <li><a href={`/${item.href}`}>{item.rotulo}</a></li>)}
+      </ul>
+    </nav>
+
+    <a href="/#contato" class="cta">Diagnóstico grátis</a>
+
+    <button class="menu" type="button" aria-expanded="false" aria-controls="menu-movel" aria-label="Abrir menu" data-menu>
+      <span></span><span></span>
+    </button>
+  </div>
+
+  <div class="movel" id="menu-movel" data-menu-painel hidden>
+    <ul>
+      {NAVEGACAO.map((item) => <li><a href={`/${item.href}`}>{item.rotulo}</a></li>)}
+      <li><a href="/#contato" class="movel-cta">Diagnóstico grátis</a></li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-nav]')
+  const botao = document.querySelector<HTMLButtonElement>('[data-menu]')
+  const painel = document.querySelector<HTMLElement>('[data-menu-painel]')
+
+  // Nav ganha fundo de vidro fosco só depois que a página saiu do topo.
+  const aoRolar = () => nav?.classList.toggle('rolou', window.scrollY > 8)
+  aoRolar()
+  window.addEventListener('scroll', aoRolar, { passive: true })
+
+  const fechar = () => {
+    botao?.setAttribute('aria-expanded', 'false')
+    nav?.classList.remove('aberto')
+    if (painel) painel.hidden = true
+  }
+
+  botao?.addEventListener('click', () => {
+    const abrir = botao.getAttribute('aria-expanded') !== 'true'
+    botao.setAttribute('aria-expanded', String(abrir))
+    nav?.classList.toggle('aberto', abrir)
+    if (painel) painel.hidden = !abrir
+  })
+
+  painel?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) fechar()
+  })
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') fechar()
+  })
+</script>
+
+<style>
+  .nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    height: var(--nav-altura);
+    transition:
+      background-color 0.4s,
+      box-shadow 0.4s;
+  }
+
+  .nav.rolou,
+  .nav.aberto {
+    background: rgb(251 251 253 / 0.78);
+    backdrop-filter: saturate(1.8) blur(20px);
+    -webkit-backdrop-filter: saturate(1.8) blur(20px);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.06);
+  }
+
+  /* Sobre seção escura a nav escurece junto (classe ligada em scripts/motion.ts). */
+  .nav.escuro.rolou:not(.aberto) {
+    background: rgb(10 14 30 / 0.72);
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.08);
+  }
+
+  .nav.escuro:not(.aberto) .marca,
+  .nav.escuro:not(.aberto) .links a {
+    color: var(--texto-noite);
+  }
+
+  .nav.escuro:not(.aberto) .menu span {
+    background: var(--texto-noite);
+  }
+
+  .interno {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .marca {
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+
+  .marca b {
+    color: var(--azul);
+    font-weight: 700;
+  }
+
+  nav {
+    margin-inline: auto;
+  }
+
+  .links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    font-size: 13px;
+  }
+
+  .links a {
+    color: var(--tinta-2);
+    transition: color 0.2s;
+  }
+
+  .links a:hover {
+    color: var(--tinta);
+  }
+
+  .cta {
+    padding: 7px 14px;
+    border-radius: var(--raio-pilula);
+    background: var(--azul);
+    color: var(--branco);
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+
+  .cta:hover {
+    background: #0a52d6;
+  }
+
+  .menu {
+    display: none;
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .menu span {
+    position: absolute;
+    left: 11px;
+    width: 18px;
+    height: 1.5px;
+    background: var(--tinta);
+    transition: transform 0.35s var(--ease);
+  }
+
+  .menu span:first-child {
+    top: 16px;
+  }
+
+  .menu span:last-child {
+    top: 23px;
+  }
+
+  .aberto .menu span:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+
+  .aberto .menu span:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+
+  .movel {
+    background: rgb(251 251 253 / 0.96);
+    backdrop-filter: saturate(1.8) blur(20px);
+    -webkit-backdrop-filter: saturate(1.8) blur(20px);
+    height: calc(100dvh - var(--nav-altura));
+    padding: 24px var(--gutter);
+  }
+
+  .movel ul {
+    list-style: none;
+    display: grid;
+    gap: 4px;
+  }
+
+  .movel a {
+    display: block;
+    padding: 12px 0;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .movel-cta {
+    color: var(--azul);
+  }
+
+  @media (max-width: 900px) {
+    nav,
+    .cta {
+      display: none;
+    }
+
+    .menu {
+      display: block;
+    }
+  }
+</style>

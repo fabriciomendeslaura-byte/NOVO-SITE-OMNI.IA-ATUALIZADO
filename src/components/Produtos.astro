@@ -1,0 +1,172 @@
+---
+import { Image } from 'astro:assets'
+import { SECAO_PRODUTOS, PORTAIS } from '../content/site'
+import logoClique from '../assets/produtos/cliqueagenda-logo.png'
+---
+
+<!--
+  A virada da história: até aqui, "construímos para você". Daqui para baixo,
+  "e construímos os nossos" — prova de que a engenharia roda em produção.
+-->
+<section id="produtos" class="produtos" data-produtos>
+  <div class="container cabeca-secao">
+    <p class="etiqueta" data-revelar>{SECAO_PRODUTOS.etiqueta}</p>
+    <h2 class="titulo-secao grande" data-revelar>
+      {SECAO_PRODUTOS.titulo}
+      <span class="destaque texto-azul">{SECAO_PRODUTOS.tituloDestaque}</span>
+    </h2>
+    <p class="lead" data-revelar>{SECAO_PRODUTOS.descricao}</p>
+  </div>
+
+  <div class="portais container">
+    <a href="#omnizap" class="portal zap" data-revelar>
+      <span class="icone">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>
+      </span>
+      <strong>OmniZap</strong>
+      <span class="desc">{PORTAIS.omnizap}</span>
+      <span class="ir">Conhecer <i>→</i></span>
+    </a>
+    <a href="#clique-agenda" class="portal clique" data-revelar>
+      <span class="icone imagem">
+        <Image src={logoClique} alt="" width={96} height={96} />
+      </span>
+      <strong>Clique Agenda</strong>
+      <span class="desc">{PORTAIS.cliqueAgenda}</span>
+      <span class="ir">Conhecer <i>→</i></span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .produtos {
+    background: var(--canvas);
+    padding-block: var(--secao) calc(var(--secao) * 0.45);
+  }
+
+  .grande {
+    font-size: clamp(38px, 6vw, 80px);
+  }
+
+  .cabeca-secao {
+    max-width: 1100px;
+  }
+
+  .portais {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: clamp(48px, 7vw, 88px);
+    perspective: 1200px;
+  }
+
+  .portal {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    padding: 32px;
+    border-radius: var(--raio-card);
+    overflow: hidden;
+    color: var(--branco);
+    min-height: 300px;
+    align-content: end;
+    isolation: isolate;
+    transition: transform 0.6s var(--ease);
+  }
+
+  .portal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transition: transform 1s var(--ease);
+  }
+
+  .portal:hover::before {
+    transform: scale(1.08);
+  }
+
+  .zap::before {
+    background:
+      radial-gradient(80% 70% at 85% 10%, rgb(61 139 255 / 0.65), transparent 60%),
+      linear-gradient(160deg, #0a1a4a, #050a1c);
+  }
+
+  .clique::before {
+    background:
+      radial-gradient(80% 70% at 85% 10%, rgb(111 177 255 / 0.55), transparent 60%),
+      linear-gradient(160deg, #0b2d6b, #04112c);
+  }
+
+  .icone {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(145deg, var(--azul-claro), var(--azul));
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.25) inset,
+      0 20px 40px -10px rgb(18 99 241 / 0.7);
+  }
+
+  .icone svg {
+    width: 30px;
+    fill: var(--branco);
+  }
+
+  /* O logo do Clique Agenda tem fundo preto: "screen" faz o preto sumir no fundo escuro. */
+  .icone.imagem {
+    width: 96px;
+    height: 96px;
+    top: 14px;
+    right: 14px;
+    background: none;
+    box-shadow: none;
+  }
+
+  .icone.imagem img {
+    mix-blend-mode: screen;
+  }
+
+  strong {
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .desc {
+    max-width: 34ch;
+    color: rgb(255 255 255 / 0.72);
+  }
+
+  .ir {
+    margin-top: 8px;
+    font-size: 15px;
+    color: var(--azul-ceu);
+  }
+
+  .ir i {
+    display: inline-block;
+    font-style: normal;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .portal:hover .ir i {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 760px) {
+    .portais {
+      grid-template-columns: 1fr;
+    }
+
+    .portal {
+      min-height: 240px;
+      padding: 24px;
+    }
+  }
+</style>

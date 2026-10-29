@@ -1,0 +1,504 @@
+---
+/**
+ * Ilustração de cada serviço, em SVG + CSS — nada de imagem pesada.
+ * Cada desenho tem um movimento contínuo e discreto que diz o que o serviço faz.
+ */
+interface Props {
+  id: string
+}
+
+const { id } = Astro.props
+---
+
+<div class:list={['visual', id]} aria-hidden="true">
+  {
+    id === 'software' && (
+      <div class="janela">
+        <div class="barra"><i /><i /><i /></div>
+        <div class="corpo">
+          <div class="lateral"><b /><b /><b /><b /></div>
+          <div class="painel">
+            <div class="kpis"><span /><span /><span /></div>
+            <div class="grafico">
+              {[40, 65, 50, 80, 60, 95, 75].map((h) => <em style={`--h:${h}%`} />)}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  {
+    id === 'agentes' && (
+      <div class="agentes-grid">
+        {['Marketing', 'Financeiro', 'Atendimento', 'Relatórios'].map((nome, i) => (
+          <div class="agente" style={`--i:${i}`}>
+            <span class="pulso" />
+            <strong>{nome}</strong>
+            <small>trabalhando…</small>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  {
+    id === 'automacoes' && (
+      <svg viewBox="0 0 320 200" class="fluxo">
+        <path d="M60 100 C110 100 110 40 160 40 M60 100 C110 100 110 160 160 160 M160 40 C210 40 210 100 260 100 M160 160 C210 160 210 100 260 100" />
+        <path class="corrente" d="M60 100 C110 100 110 40 160 40 C210 40 210 100 260 100" />
+        <path class="corrente atraso" d="M60 100 C110 100 110 160 160 160 C210 160 210 100 260 100" />
+        <g>
+          <rect x="30" y="76" width="56" height="48" rx="14" />
+          <rect x="132" y="18" width="56" height="44" rx="14" />
+          <rect x="132" y="138" width="56" height="44" rx="14" />
+          <rect x="232" y="76" width="56" height="48" rx="14" class="fim" />
+        </g>
+        <text x="58" y="105">CRM</text>
+        <text x="160" y="45">ERP</text>
+        <text x="160" y="165">E-mail</text>
+        <text x="260" y="105" class="fim-txt">
+          ✓
+        </text>
+      </svg>
+    )
+  }
+  {
+    id === 'crm' && (
+      <div class="kanban">
+        {['Novo', 'Qualificado', 'Proposta', 'Fechado'].map((coluna, c) => (
+          <div class="coluna">
+            <small>{coluna}</small>
+            {Array.from({ length: 3 - Math.floor(c / 2) }).map((_, i) => (
+              <span style={`--d:${c * 0.4 + i * 0.15}s`} />
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
+  {
+    id === 'aplicativos' && (
+      <div class="apps">
+        <div class="navegador">
+          <div class="barra"><i /><i /><i /></div>
+          <div class="site">
+            <b />
+            <b class="curto" />
+            <span />
+          </div>
+        </div>
+        <div class="celular">
+          <div class="notch" />
+          <b />
+          <b class="curto" />
+          <span />
+          <span />
+        </div>
+      </div>
+    )
+  }
+  {
+    id === 'infra' && (
+      <div class="servidores">
+        {[0, 1, 2].map((i) => (
+          <div class="servidor" style={`--i:${i}`}>
+            <i />
+            <i />
+            <span />
+            <em>{['vps-01 · isolada', 'backup · 2 destinos', 'ssl · monitorado'][i]}</em>
+          </div>
+        ))}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .visual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 20px;
+    background: linear-gradient(160deg, var(--gelo) 0%, #f9fbff 100%);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: 8%;
+  }
+
+  /* ---- software ---- */
+  .janela {
+    width: 100%;
+    border-radius: 12px;
+    background: var(--branco);
+    box-shadow: 0 20px 40px -20px rgb(18 99 241 / 0.35);
+    overflow: hidden;
+  }
+
+  .barra {
+    display: flex;
+    gap: 5px;
+    padding: 9px 11px;
+    border-bottom: 1px solid #eef0f4;
+  }
+
+  .barra i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #dfe3ea;
+  }
+
+  .corpo {
+    display: grid;
+    grid-template-columns: 22% 1fr;
+    min-height: 130px;
+  }
+
+  .lateral {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    padding: 12px 10px;
+    background: #f6f8fc;
+  }
+
+  .lateral b {
+    height: 6px;
+    border-radius: 3px;
+    background: #dde3ee;
+  }
+
+  .lateral b:first-child {
+    background: var(--azul);
+  }
+
+  .painel {
+    padding: 12px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .kpis span {
+    height: 26px;
+    border-radius: 6px;
+    background: #f1f4fa;
+  }
+
+  .grafico {
+    height: 70px;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .grafico em {
+    flex: 1;
+    height: var(--h);
+    border-radius: 4px 4px 0 0;
+    background: linear-gradient(180deg, var(--azul-claro), var(--azul));
+    transform-origin: bottom;
+    animation: crescer 3.2s var(--ease) infinite alternate;
+  }
+
+  .grafico em:nth-child(odd) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes crescer {
+    from {
+      transform: scaleY(0.55);
+    }
+  }
+
+  /* ---- agentes ---- */
+  .agentes-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .agente {
+    position: relative;
+    display: grid;
+    gap: 2px;
+    padding: 14px 14px 14px 38px;
+    border-radius: 14px;
+    background: var(--branco);
+    box-shadow: 0 10px 30px -18px rgb(18 99 241 / 0.4);
+    font-size: 14px;
+  }
+
+  .agente small {
+    color: var(--tinta-3);
+    font-size: 12px;
+  }
+
+  .pulso {
+    position: absolute;
+    left: 14px;
+    top: 18px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--azul);
+  }
+
+  .pulso::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--azul);
+    animation: pulsar 2s ease-out infinite;
+    animation-delay: calc(var(--i) * 0.5s);
+  }
+
+  @keyframes pulsar {
+    to {
+      transform: scale(2.8);
+      opacity: 0;
+    }
+  }
+
+  /* ---- automações ---- */
+  .fluxo {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .fluxo path {
+    fill: none;
+    stroke: #c8d6f3;
+    stroke-width: 2;
+  }
+
+  .fluxo .corrente {
+    stroke: var(--azul);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 26 400;
+    animation: correr 2.6s linear infinite;
+  }
+
+  .fluxo .atraso {
+    animation-delay: 1.3s;
+  }
+
+  @keyframes correr {
+    from {
+      stroke-dashoffset: 26;
+    }
+    to {
+      stroke-dashoffset: -400;
+    }
+  }
+
+  .fluxo rect {
+    fill: var(--branco);
+    stroke: #d7e2f7;
+    filter: drop-shadow(0 8px 14px rgb(18 99 241 / 0.15));
+  }
+
+  .fluxo .fim {
+    fill: var(--azul);
+    stroke: none;
+  }
+
+  .fluxo text {
+    font-size: 12px;
+    font-weight: 600;
+    text-anchor: middle;
+    fill: var(--tinta);
+  }
+
+  .fluxo .fim-txt {
+    fill: var(--branco);
+    font-size: 18px;
+  }
+
+  /* ---- crm ---- */
+  .kanban {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .coluna {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 8px;
+    border-radius: 10px;
+    background: rgb(255 255 255 / 0.6);
+    min-height: 140px;
+  }
+
+  .coluna small {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--tinta-3);
+  }
+
+  .coluna span {
+    height: 30px;
+    border-radius: 7px;
+    background: var(--branco);
+    box-shadow: 0 4px 10px -6px rgb(0 0 0 / 0.2);
+    border-left: 3px solid var(--azul);
+    animation: cair 4s var(--ease) infinite;
+    animation-delay: var(--d);
+  }
+
+  @keyframes cair {
+    0% {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    15%,
+    85% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* ---- aplicativos e sites ---- */
+  .apps {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .navegador {
+    position: absolute;
+    left: 0;
+    top: 6%;
+    width: 78%;
+    border-radius: 12px;
+    background: var(--branco);
+    box-shadow: 0 20px 40px -24px rgb(18 99 241 / 0.4);
+    overflow: hidden;
+  }
+
+  .site {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .site b,
+  .celular b {
+    height: 10px;
+    border-radius: 5px;
+    background: var(--tinta);
+    width: 70%;
+  }
+
+  .site b.curto,
+  .celular b.curto {
+    width: 45%;
+    background: #d5dbe6;
+  }
+
+  .site span {
+    height: 54px;
+    border-radius: 8px;
+    background: linear-gradient(120deg, var(--azul), var(--azul-ceu));
+  }
+
+  .celular {
+    position: absolute;
+    right: 2%;
+    bottom: 0;
+    width: 30%;
+    aspect-ratio: 9 / 18;
+    border-radius: 18px;
+    background: var(--branco);
+    border: 4px solid var(--tinta);
+    padding: 22px 8px 8px;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    animation: flutuar 5s ease-in-out infinite;
+  }
+
+  .celular span {
+    height: 26px;
+    border-radius: 6px;
+    background: var(--gelo);
+  }
+
+  .notch {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    width: 34%;
+    height: 7px;
+    margin-left: -17%;
+    border-radius: 4px;
+    background: var(--tinta);
+  }
+
+  @keyframes flutuar {
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  /* ---- infra ---- */
+  .servidores {
+    width: 100%;
+    display: grid;
+    gap: 10px;
+  }
+
+  .servidor {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--noite);
+    color: var(--texto-noite-2);
+    font-family: var(--fonte-mono);
+    font-size: 12px;
+  }
+
+  .servidor i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #31d07a;
+    animation: piscar 1.6s steps(2) infinite;
+    animation-delay: calc(var(--i) * 0.3s);
+  }
+
+  .servidor i + i {
+    background: var(--azul-claro);
+    animation-delay: calc(var(--i) * 0.3s + 0.5s);
+  }
+
+  .servidor span {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: rgb(255 255 255 / 0.08);
+  }
+
+  @keyframes piscar {
+    50% {
+      opacity: 0.25;
+    }
+  }
+</style>

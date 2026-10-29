@@ -1,0 +1,365 @@
+---
+import { DIA } from '../content/site'
+
+/** Ícones em traço fino de cada tipo de tarefa. */
+const ICONES: Record<string, string> = {
+  nota: 'M7 3h7l4 4v14H7V3Zm7 0v4h4M10 12h5M10 16h5',
+  lead: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0M17 8l2 2 3-3',
+  loop: 'M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15M4 20v-5h5',
+  relatorio: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+  chat: 'M4 5h16v11H9l-5 4V5Zm5 5h6',
+}
+
+const INICIO = 360 // 06:00
+const FIM = 1440 // 24:00
+const posicao = (minuto: number) => ((minuto - INICIO) / (FIM - INICIO)) * 100
+---
+
+<section id="um-dia" class="dia" data-dia>
+  <div class="palco container-largo" data-dia-palco>
+    <div class="lado-texto">
+      <p class="etiqueta">{DIA.etiqueta}</p>
+      <h2 class="titulo">
+        {DIA.titulo}
+        <span class="destaque">{DIA.tituloDestaque}</span>
+      </h2>
+
+      <div class="relogio" aria-hidden="true">
+        <span class="hora" data-dia-hora>06:00</span>
+        <span class="periodo" data-dia-periodo>amanhecer</span>
+      </div>
+
+      <!-- Linha do tempo do dia: o preenchimento anda com o relógio. -->
+      <div class="linha" aria-hidden="true">
+        <span class="trilha"><span class="tinta" data-dia-tinta></span></span>
+        {DIA.eventos.map((e) => <i class="marca" style={`left:${posicao(e.minuto)}%`} data-dia-marca />)}
+        <span class="rotulos"><b>06h</b><b>12h</b><b>18h</b><b>24h</b></span>
+      </div>
+    </div>
+
+    <div class="lado-feed">
+      <ol class="feed">
+        {
+          DIA.eventos.map((e) => (
+            <li class="evento" data-dia-evento data-minuto={e.minuto}>
+              <span class="icone">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d={ICONES[e.icone]} />
+                </svg>
+              </span>
+              <div>
+                <p class="meta">
+                  <time>{e.hora}</time> · {e.area}
+                </p>
+                <p class="texto">{e.texto}</p>
+              </div>
+              <span class="ok" aria-label="concluído pelo agente">✓</span>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="fecho" data-dia-fecho>
+        <p class="fecho-titulo">{DIA.fecho}</p>
+        <p class="fecho-apoio">{DIA.fechoApoio}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+   * As cores da cena vêm de variáveis: o script muda o fundo do amanhecer à
+   * noite, e a classe .noite inverte o texto quando escurece.
+   */
+  .dia {
+    --fundo-dia: var(--canvas);
+    --texto-dia: var(--tinta);
+    --texto-dia-2: var(--tinta-3);
+    --card-dia: var(--branco);
+    --borda-dia: rgb(0 0 0 / 0.06);
+    background: var(--fundo-dia);
+    color: var(--texto-dia);
+    transition: color 0.6s;
+  }
+
+  .dia.noite {
+    --texto-dia: var(--texto-noite);
+    --texto-dia-2: var(--texto-noite-2);
+    --card-dia: rgb(255 255 255 / 0.06);
+    --borda-dia: rgb(255 255 255 / 0.1);
+  }
+
+  .palco {
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: center;
+    gap: clamp(32px, 5vw, 80px);
+    padding-block: calc(var(--nav-altura) + 32px) 32px;
+  }
+
+  .lado-texto {
+    display: grid;
+    gap: 22px;
+  }
+
+  .titulo {
+    font-size: clamp(28px, 3.4vw, 46px);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: var(--tracking-titulo);
+    text-wrap: balance;
+  }
+
+  .destaque {
+    display: block;
+    color: var(--texto-dia-2);
+    transition: color 0.6s;
+  }
+
+  /* ---------- relógio ---------- */
+  .relogio {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .hora {
+    font-size: clamp(64px, 9vw, 132px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(100deg, var(--azul-profundo), var(--azul) 50%, var(--azul-claro));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .dia.noite .hora {
+    background: linear-gradient(100deg, var(--azul-claro), var(--azul-ceu) 60%, #b9d8ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .periodo {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--texto-dia-2);
+  }
+
+  /* ---------- linha do tempo ---------- */
+  .linha {
+    position: relative;
+    padding-bottom: 26px;
+  }
+
+  .trilha {
+    display: block;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--borda-dia);
+    overflow: hidden;
+  }
+
+  .tinta {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--azul-ceu), var(--azul));
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  .marca {
+    position: absolute;
+    top: -4px;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    border-radius: 50%;
+    background: var(--fundo-dia);
+    border: 2px solid var(--texto-dia-2);
+    transition:
+      background-color 0.3s,
+      border-color 0.3s,
+      transform 0.3s var(--ease);
+  }
+
+  .marca.passou {
+    background: var(--azul);
+    border-color: var(--azul);
+    transform: scale(1.2);
+  }
+
+  .rotulos {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--fonte-mono);
+    font-size: 11px;
+    color: var(--texto-dia-2);
+  }
+
+  .rotulos b {
+    font-weight: 400;
+  }
+
+  /* ---------- feed de tarefas ---------- */
+  .lado-feed {
+    position: relative;
+    display: grid;
+    gap: 16px;
+  }
+
+  .feed {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .evento {
+    display: grid;
+    grid-template-columns: 42px 1fr 24px;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: var(--card-dia);
+    border: 1px solid var(--borda-dia);
+    box-shadow: 0 18px 40px -28px rgb(7 11 26 / 0.35);
+    transition:
+      background-color 0.6s,
+      border-color 0.6s;
+  }
+
+  .icone {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--gelo);
+  }
+
+  .icone svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: var(--azul);
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .meta {
+    font-size: 12px;
+    color: var(--texto-dia-2);
+  }
+
+  .meta time {
+    font-family: var(--fonte-mono);
+    color: var(--azul);
+    font-weight: 600;
+  }
+
+  .dia.noite .meta time {
+    color: var(--azul-ceu);
+  }
+
+  .texto {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .ok {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #e3f7ea;
+    color: #138a4a;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  /* Estados iniciais — escondidos só quando o motion está ativo. */
+  :global(.motion) .evento {
+    opacity: 0;
+  }
+
+  :global(.motion) .fecho {
+    opacity: 0;
+  }
+
+  .fecho {
+    padding-top: 8px;
+  }
+
+  .fecho-titulo {
+    font-size: clamp(22px, 2.4vw, 30px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .fecho-apoio {
+    margin-top: 6px;
+    color: var(--texto-dia-2);
+  }
+
+  @media (max-width: 900px) {
+    .palco {
+      grid-template-columns: 1fr;
+      align-content: start;
+      gap: 18px;
+    }
+
+    .lado-texto {
+      gap: 12px;
+    }
+
+    .titulo {
+      font-size: clamp(20px, 5.6vw, 28px);
+    }
+
+    /* No celular o subtítulo cede espaço para o relógio e o feed. */
+    .destaque {
+      display: none;
+    }
+
+    .relogio {
+      margin-top: 0;
+    }
+
+    .hora {
+      font-size: 64px;
+    }
+
+    /* No celular, um card por vez: o novo entra e o anterior sai. */
+    :global(.motion) .feed {
+      grid-template-areas: 'e';
+    }
+
+    :global(.motion) .evento {
+      grid-area: e;
+    }
+
+    .evento {
+      padding: 12px 14px;
+      grid-template-columns: 36px 1fr 22px;
+      gap: 12px;
+    }
+
+    .icone {
+      width: 36px;
+      height: 36px;
+    }
+
+    .texto {
+      font-size: 14px;
+    }
+  }
+</style>

@@ -1,0 +1,153 @@
+---
+import Botao from './Botao.astro'
+import { OMNIZAP, LINKS, linkWhatsApp } from '../content/site'
+
+/** Ícones em traço fino, no estilo dos glifos de sistema. */
+const ICONES: Record<string, string> = {
+  bot: 'M12 3v3M7 9h10a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-4a3 3 0 0 1 3-3Zm2 5h.01M15 13h.01M9.5 16h5',
+  loop: 'M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15M4 20v-5h5',
+  users: 'M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8',
+  calendar: 'M7 3v3M17 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm4 9 2 2 4-4',
+  shield: 'M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3Zm-3 9 2 2 4-4',
+}
+---
+
+<section id="omnizap" class="omnizap" data-omnizap>
+  <div class="container cabeca-secao">
+    <p class="selo" data-revelar>
+      <span class="raio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg></span>
+      {OMNIZAP.etiqueta}
+    </p>
+    <h2 class="titulo-secao grande" data-revelar>
+      {OMNIZAP.titulo}
+      <span class="destaque texto-azul">{OMNIZAP.tituloDestaque}</span>
+    </h2>
+    <p class="lead" data-revelar>{OMNIZAP.subtitulo}</p>
+    <div class="acoes" data-revelar>
+      <Botao href={LINKS.omnizap} externo tamanho="lg">{OMNIZAP.cta}</Botao>
+      <Botao href={linkWhatsApp('Olá! Quero conhecer o OmniZap.')} externo variante="contorno" tamanho="lg">
+        {OMNIZAP.ctaSecundario}
+      </Botao>
+    </div>
+  </div>
+
+  <div class="container-largo">
+    <ul class="recursos">
+      {
+        OMNIZAP.recursos.map((r) => (
+          <li data-omnizap-recurso>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d={ICONES[r.icone]} />
+            </svg>
+            <h3>{r.titulo}</h3>
+            <p>{r.texto}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .omnizap {
+    background: linear-gradient(180deg, var(--canvas) 0%, var(--gelo) 30%, var(--gelo) 100%);
+    padding-block: calc(var(--secao) * 0.55) var(--secao);
+    overflow: hidden;
+  }
+
+  .grande {
+    font-size: clamp(38px, 6vw, 80px);
+  }
+
+  .cabeca-secao {
+    max-width: 1100px;
+  }
+
+  .selo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .raio {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(145deg, var(--azul-claro), var(--azul));
+    box-shadow: 0 10px 24px -8px rgb(18 99 241 / 0.6);
+  }
+
+  .raio svg {
+    width: 20px;
+    fill: var(--branco);
+  }
+
+  .acoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .recursos {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-top: clamp(40px, 6vw, 72px);
+  }
+
+  .recursos li {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    padding: 24px 20px;
+    border-radius: 22px;
+    background: rgb(255 255 255 / 0.75);
+    border: 1px solid rgb(255 255 255 / 0.9);
+    transition: transform 0.5s var(--ease);
+  }
+
+  .recursos li:hover {
+    transform: translateY(-4px);
+  }
+
+  .recursos svg {
+    width: 30px;
+    height: 30px;
+    fill: none;
+    stroke: var(--azul);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-bottom: 6px;
+  }
+
+  .recursos h3 {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .recursos p {
+    font-size: 14px;
+    color: var(--tinta-3);
+    line-height: 1.45;
+  }
+
+  @media (max-width: 1000px) {
+    .recursos {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .recursos li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

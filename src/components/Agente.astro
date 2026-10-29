@@ -1,0 +1,825 @@
+---
+import {
+  SECAO_AGENTE,
+  PASSOS_AGENTE,
+  CONVERSA,
+  CONFERENCIA,
+  CLAUDE_CODE,
+  ARQUITETURA,
+  ANATOMIA,
+} from '../content/site'
+
+/*
+ * Posições do diagrama de arquitetura (viewBox 400 × 340).
+ * Cada agente liga ao orquestrador e às ferramentas que usa.
+ */
+const xs = [55, 150, 250, 345]
+const ligacoes = [
+  [0, 0], [0, 2], // Atendimento → CRM, Agenda
+  [1, 0], [1, 3], // Comercial → CRM, E-mail
+  [2, 1], [2, 3], // Financeiro → ERP, E-mail
+  [3, 0], [3, 1], // Relatórios → CRM, ERP
+]
+
+const ICONES_ANATOMIA = [
+  'M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3ZM9.5 19h5M10.5 21.5h3',
+  'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5Z',
+  'M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4Zm0 13a3 3 0 0 1 3-3h10M9 8h5',
+  'M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3Zm-3 9 2 2 4-4',
+]
+---
+
+<section id="agentes" class="secao-agente" data-agente>
+  <div class="palco container-largo" data-agente-palco>
+    <div class="lado-texto">
+      <p class="etiqueta">{SECAO_AGENTE.etiqueta}</p>
+      <h2 class="titulo-secao">
+        {SECAO_AGENTE.titulo}
+        <span class="destaque">{SECAO_AGENTE.tituloDestaque}</span>
+      </h2>
+      <p class="descricao">{SECAO_AGENTE.descricao}</p>
+
+      <ol class="passos">
+        {
+          PASSOS_AGENTE.map((p, i) => (
+            <li data-agente-passo={i}>
+              <span class="num">0{i + 1}</span>
+              <div>
+                <h3>{p.rotulo}</h3>
+                <p>{p.texto}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div class="lado-janela">
+      <div class="brilho" aria-hidden="true"></div>
+      <div class="janela" role="img" aria-label="Demonstração de agentes de IA: atendimento no WhatsApp, conferência financeira, Claude Code gerando relatório e arquitetura multiagente">
+        <div class="barra" aria-hidden="true">
+          <i></i><i></i><i></i>
+          <span data-agente-titulo>whatsapp · agente de atendimento</span>
+        </div>
+
+        <div class="telas" aria-hidden="true">
+          <!-- 1. Atendimento -->
+          <div class="tela chat" data-agente-tela data-titulo="whatsapp · agente de atendimento">
+            <div class="chat-topo">
+              <span class="avatar">IA</span>
+              <div><strong>Clínica Sorriso</strong><small>online</small></div>
+            </div>
+            <div class="chat-msgs">
+              {
+                CONVERSA.map((m) => (
+                  <div class:list={['msg', m.de]} data-agente-item>
+                    <p>{m.texto}</p>
+                    <time>{m.hora}</time>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+
+          <!-- 2. Financeiro -->
+          <div class="tela fin" data-agente-tela data-titulo="agente financeiro · conferência de notas">
+            <div class="fin-topo">
+              <span class="pulso"></span>
+              <div>
+                <strong>Conferência diária de notas fiscais</strong>
+                <small>Notas × pedidos de compra · 07:00</small>
+              </div>
+            </div>
+            <ul class="fin-lista">
+              {
+                CONFERENCIA.map((c) => (
+                  <li class:list={{ alerta: !c.ok }} data-agente-item>
+                    <span class="status">{c.ok ? '✓' : '!'}</span>
+                    <div>
+                      <strong>{c.doc}</strong>
+                      {c.aviso && <small>{c.aviso}</small>}
+                    </div>
+                    <em>{c.valor}</em>
+                  </li>
+                ))
+              }
+            </ul>
+            <div class="fin-resumo" data-agente-item>
+              <strong>3 notas conferidas · 1 divergência</strong>
+              <small>Alerta enviado ao financeiro com o pedido anexado.</small>
+            </div>
+          </div>
+
+          <!-- 3. Claude Code -->
+          <div class="tela cc" data-agente-tela data-titulo="claude code · sua-empresa">
+            <p class="cc-pedido" data-agente-item><span>&gt;</span> {CLAUDE_CODE.pedido}</p>
+            {
+              CLAUDE_CODE.passos.map((p) => (
+                <p class="cc-passo" data-agente-item>
+                  <span>●</span> {p}
+                </p>
+              ))
+            }
+            <p class="cc-final" data-agente-item>✓ {CLAUDE_CODE.final}</p>
+            <div class="cc-skills" data-agente-item>
+              <span>skills da empresa</span>
+              <b>relatorio-vendas</b><b>crm</b><b>email-diretoria</b>
+            </div>
+          </div>
+
+          <!-- 4. Arquitetura -->
+          <div class="tela arq" data-agente-tela data-titulo="arquitetura · multiagente">
+            <svg viewBox="0 0 400 340" class="diagrama">
+              <g class="linhas">
+                {xs.map((x) => <path d={`M200 62 C200 100 ${x} 100 ${x} 150`} pathLength="1" data-agente-item data-ordem="1" />)}
+                {ligacoes.map(([ag, fe]) => <path d={`M${xs[ag]} 186 C${xs[ag]} 225 ${xs[fe]} 225 ${xs[fe]} 268`} pathLength="1" data-agente-item data-ordem="3" />)}
+              </g>
+              <g class="no orq" data-agente-item data-ordem="0">
+                <rect x="130" y="22" width="140" height="42" rx="21" />
+                <text x="200" y="48">{ARQUITETURA.orquestrador}</text>
+              </g>
+              {
+                ARQUITETURA.agentes.map((a, i) => (
+                  <g class="no agente" data-agente-item data-ordem="2">
+                    <rect x={xs[i] - 44} y="150" width="88" height="36" rx="12" />
+                    <text x={xs[i]} y="173">{a}</text>
+                  </g>
+                ))
+              }
+              {
+                ARQUITETURA.ferramentas.map((f, i) => (
+                  <g class="no ferramenta" data-agente-item data-ordem="4">
+                    <rect x={xs[i] - 36} y="268" width="72" height="32" rx="8" />
+                    <text x={xs[i]} y="289">{f}</text>
+                  </g>
+                ))
+              }
+            </svg>
+            <p class="legenda">Cada agente é especialista em uma função. O orquestrador distribui o trabalho e todos usam os mesmos sistemas, com permissões próprias.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="anatomia container-largo">
+    <div class="anatomia-cabeca" data-revelar>
+      <h3>{ANATOMIA.titulo}</h3>
+      <p>{ANATOMIA.descricao}</p>
+    </div>
+    <ol class="partes">
+      {
+        ANATOMIA.partes.map((p, i) => (
+          <li data-revelar>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d={ICONES_ANATOMIA[i]} />
+            </svg>
+            <span class="camada">camada 0{i + 1}</span>
+            <h4>{p.titulo}</h4>
+            <p>{p.texto}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="areas" data-revelar>
+      <p>{ANATOMIA.areasTitulo}</p>
+      <ul>
+        {ANATOMIA.areas.map((a) => <li>{a}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .secao-agente {
+    background: var(--branco);
+    padding-bottom: var(--secao);
+  }
+
+  .palco {
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: center;
+    gap: clamp(32px, 5vw, 80px);
+    padding-block: calc(var(--nav-altura) + 28px) 28px;
+  }
+
+  .lado-texto {
+    display: grid;
+    gap: 16px;
+  }
+
+  .lado-texto .titulo-secao {
+    font-size: clamp(30px, 3.6vw, 50px);
+  }
+
+  .descricao {
+    color: var(--tinta-2);
+    max-width: 52ch;
+  }
+
+  .passos {
+    list-style: none;
+    display: grid;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .passos li {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    transition:
+      background-color 0.5s var(--ease),
+      opacity 0.5s var(--ease);
+  }
+
+  :global(.motion) .passos li {
+    opacity: 0.35;
+  }
+
+  :global(.motion) .passos li.ativo {
+    opacity: 1;
+    background: var(--gelo);
+  }
+
+  .num {
+    font-family: var(--fonte-mono);
+    font-size: 13px;
+    color: var(--azul);
+    padding-top: 3px;
+  }
+
+  .passos h3 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .passos p {
+    font-size: 15px;
+    color: var(--tinta-3);
+  }
+
+  /* ---------- janela ---------- */
+  .lado-janela {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+
+  .brilho {
+    position: absolute;
+    width: 110%;
+    aspect-ratio: 1;
+    background: radial-gradient(closest-side, rgb(18 99 241 / 0.2), transparent);
+    filter: blur(20px);
+  }
+
+  .janela {
+    position: relative;
+    width: min(580px, 100%);
+    height: min(560px, 74svh);
+    border-radius: 22px;
+    background: var(--branco);
+    border: 1px solid #e3e6ee;
+    box-shadow: 0 50px 100px -40px rgb(7 11 26 / 0.4);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .barra {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #eef0f4;
+    background: #fafbfd;
+  }
+
+  .barra i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #dfe3ea;
+  }
+
+  .barra span {
+    margin-inline: auto;
+    font-family: var(--fonte-mono);
+    font-size: 12px;
+    color: var(--tinta-3);
+  }
+
+  .telas {
+    position: relative;
+    flex: 1;
+  }
+
+  .tela {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Sem JS, só a primeira tela aparece (as outras ficam escondidas). */
+  .tela + .tela {
+    visibility: hidden;
+  }
+
+  :global(.motion) [data-agente-item] {
+    opacity: 0;
+  }
+
+  /* --- tela 1: chat --- */
+  .chat {
+    background: #e9e3da;
+  }
+
+  .chat-topo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #075e54;
+    color: var(--branco);
+  }
+
+  .chat-topo strong {
+    display: block;
+    font-size: 15px;
+  }
+
+  .chat-topo small {
+    font-size: 12px;
+    opacity: 0.8;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--azul), var(--azul-ceu));
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .chat-msgs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 6px;
+    padding: 14px;
+    overflow: hidden;
+  }
+
+  .msg {
+    max-width: 78%;
+    padding: 7px 10px 5px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.08);
+  }
+
+  .msg time {
+    display: block;
+    text-align: right;
+    font-size: 10px;
+    color: rgb(0 0 0 / 0.45);
+  }
+
+  .cliente {
+    align-self: flex-start;
+    background: var(--branco);
+    border-top-left-radius: 4px;
+  }
+
+  .msg.agente {
+    align-self: flex-end;
+    background: #d9fdd3;
+    border-top-right-radius: 4px;
+  }
+
+  /* --- tela 2: financeiro --- */
+  .fin {
+    padding: 20px;
+    gap: 14px;
+    background: #f7f9fc;
+  }
+
+  .fin-topo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .fin-topo strong {
+    display: block;
+    font-size: 16px;
+  }
+
+  .fin-topo small {
+    font-size: 12px;
+    color: var(--tinta-3);
+  }
+
+  .pulso {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #31c46c;
+    flex: none;
+  }
+
+  .pulso::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: inherit;
+    animation: pulsar 2s ease-out infinite;
+  }
+
+  @keyframes pulsar {
+    to {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+
+  .fin-lista {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+  }
+
+  .fin-lista li {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--branco);
+    border: 1px solid #e8ebf2;
+    font-size: 14px;
+  }
+
+  .fin-lista strong {
+    display: block;
+    font-weight: 500;
+  }
+
+  .fin-lista small {
+    font-size: 12px;
+    color: #c2410c;
+  }
+
+  .fin-lista em {
+    font-style: normal;
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-2);
+  }
+
+  .status {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #e3f7ea;
+    color: #138a4a;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .fin-lista li.alerta {
+    border-color: #fed7aa;
+    background: #fff8f1;
+  }
+
+  .alerta .status {
+    background: #ffedd5;
+    color: #c2410c;
+  }
+
+  .fin-resumo {
+    margin-top: auto;
+    display: grid;
+    gap: 2px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--azul);
+    color: var(--branco);
+    font-size: 14px;
+  }
+
+  .fin-resumo small {
+    opacity: 0.85;
+  }
+
+  /* --- tela 3: Claude Code --- */
+  .cc {
+    padding: 22px;
+    gap: 10px;
+    background: #0d1022;
+    color: #c9d1e6;
+    font-family: var(--fonte-mono);
+    font-size: clamp(12px, 1.1vw, 14px);
+    line-height: 1.55;
+  }
+
+  .cc-pedido {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgb(255 255 255 / 0.06);
+    color: var(--branco);
+  }
+
+  .cc-pedido span {
+    color: #d97757;
+    margin-right: 6px;
+  }
+
+  .cc-passo span {
+    color: var(--azul-ceu);
+    margin-right: 6px;
+  }
+
+  .cc-final {
+    color: #5ee39a;
+  }
+
+  .cc-skills {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .cc-skills span {
+    color: #7c84a0;
+    margin-right: 4px;
+  }
+
+  .cc-skills b {
+    font-weight: 400;
+    padding: 4px 10px;
+    border-radius: var(--raio-pilula);
+    border: 1px solid rgb(255 255 255 / 0.14);
+    color: var(--texto-noite);
+  }
+
+  /* --- tela 4: arquitetura --- */
+  .arq {
+    padding: 16px 18px 18px;
+    background:
+      radial-gradient(rgb(18 99 241 / 0.08) 1px, transparent 1px) 0 0 / 18px 18px,
+      #fbfcff;
+  }
+
+  .diagrama {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+  }
+
+  .linhas path {
+    fill: none;
+    stroke: var(--azul);
+    stroke-width: 1.6;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    opacity: 0.5;
+  }
+
+  .no rect {
+    stroke-width: 1.2;
+  }
+
+  .no text {
+    text-anchor: middle;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--fonte);
+  }
+
+  .orq rect {
+    fill: var(--azul);
+    filter: drop-shadow(0 10px 18px rgb(18 99 241 / 0.4));
+  }
+
+  .orq text {
+    fill: var(--branco);
+    font-size: 14px;
+  }
+
+  .agente rect {
+    fill: var(--branco);
+    stroke: #c9d8f6;
+  }
+
+  .agente text {
+    fill: var(--tinta);
+  }
+
+  .ferramenta rect {
+    fill: var(--noite);
+  }
+
+  .ferramenta text {
+    fill: var(--texto-noite);
+    font-family: var(--fonte-mono);
+    font-weight: 400;
+    font-size: 11px;
+  }
+
+  .legenda {
+    font-size: 13px;
+    color: var(--tinta-3);
+    text-align: center;
+    max-width: 44ch;
+    margin-inline: auto;
+  }
+
+  /* ---------- anatomia ---------- */
+  .anatomia {
+    display: grid;
+    gap: 28px;
+    padding-top: clamp(64px, 8vw, 112px);
+  }
+
+  .anatomia-cabeca {
+    display: grid;
+    gap: 8px;
+    max-width: 640px;
+  }
+
+  .anatomia-cabeca h3 {
+    font-size: var(--t-h3);
+    font-weight: 600;
+    letter-spacing: var(--tracking-titulo);
+  }
+
+  .anatomia-cabeca p {
+    color: var(--tinta-3);
+  }
+
+  .partes {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .partes li {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    padding: 26px 22px;
+    border-radius: 22px;
+    background: var(--canvas);
+    transition: transform 0.5s var(--ease);
+  }
+
+  .partes li:hover {
+    transform: translateY(-4px);
+  }
+
+  .partes svg {
+    width: 30px;
+    height: 30px;
+    fill: none;
+    stroke: var(--azul);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-bottom: 6px;
+  }
+
+  .camada {
+    font-family: var(--fonte-mono);
+    font-size: 11px;
+    color: var(--azul);
+  }
+
+  .partes h4 {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .partes p {
+    font-size: 15px;
+    color: var(--tinta-3);
+  }
+
+  .areas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+  }
+
+  .areas p {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .areas ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .areas li {
+    padding: 7px 14px;
+    border-radius: var(--raio-pilula);
+    background: var(--gelo);
+    color: var(--azul-link);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 1000px) {
+    .partes {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .palco {
+      grid-template-columns: 1fr;
+      align-content: start;
+      gap: 16px;
+    }
+
+    .descricao {
+      display: none;
+    }
+
+    .lado-texto .titulo-secao {
+      font-size: clamp(26px, 7.4vw, 36px);
+    }
+
+    /* No celular só o passo ativo aparece, para caber junto com a janela. */
+    .passos {
+      margin-top: 0;
+    }
+
+    :global(.motion) .passos {
+      grid-template-areas: 'p';
+    }
+
+    :global(.motion) .passos li {
+      grid-area: p;
+    }
+
+    :global(.motion) .passos li {
+      opacity: 0;
+    }
+
+    .janela {
+      height: max(330px, calc(100svh - 440px));
+    }
+
+    .msg {
+      font-size: 13px;
+    }
+
+    .fin {
+      padding: 14px;
+      gap: 10px;
+    }
+
+    .fin-lista li {
+      padding: 9px 10px;
+      font-size: 12px;
+    }
+
+    .cc {
+      padding: 14px;
+      font-size: 11.5px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .partes {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

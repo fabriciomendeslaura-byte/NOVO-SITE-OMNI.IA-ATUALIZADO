@@ -1,0 +1,440 @@
+---
+import { Image } from 'astro:assets'
+import Botao from './Botao.astro'
+import { CLIQUE_AGENDA, LINKS } from '../content/site'
+import logo from '../assets/produtos/cliqueagenda-logo.png'
+import fotoCorte from '../assets/produtos/corte-degrade.webp'
+import fotoBarba from '../assets/produtos/barba.webp'
+import fotoSobrancelha from '../assets/produtos/sobrancelha.webp'
+
+const servicos = [
+  { nome: 'Corte degradê', duracao: '40 min', preco: 'R$ 45', foto: fotoCorte },
+  { nome: 'Barba completa', duracao: '30 min', preco: 'R$ 35', foto: fotoBarba },
+  { nome: 'Sobrancelha', duracao: '15 min', preco: 'R$ 20', foto: fotoSobrancelha },
+]
+
+const horarios = ['09:00', '09:40', '10:20', '11:00', '13:30', '14:10', '14:50', '15:30', '16:10']
+const ocupados = new Set(['09:40', '11:00', '14:50'])
+const escolhido = '14:10'
+---
+
+<section id="clique-agenda" class="clique" data-clique data-holofote data-tema="escuro">
+  <div class="palco container-largo" data-clique-palco>
+    <div class="lado-texto">
+      <div class="logo" data-clique-logo>
+        <Image src={logo} alt="Logo do Clique Agenda" width={220} height={220} />
+      </div>
+      <p class="etiqueta claro">{CLIQUE_AGENDA.etiqueta}</p>
+      <h2 class="titulo-secao">
+        {CLIQUE_AGENDA.titulo}
+        <span class="destaque">{CLIQUE_AGENDA.tituloDestaque}</span>
+      </h2>
+      <p class="lead">{CLIQUE_AGENDA.subtitulo}</p>
+
+      <ol class="passos">
+        {
+          CLIQUE_AGENDA.passos.map((p, i) => (
+            <li data-clique-passo={i}>
+              <span>{i + 1}</span>
+              <div>
+                <h3>{p.titulo}</h3>
+                <p>{p.texto}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="rodape-texto">
+        <Botao href={LINKS.cliqueAgenda} externo variante="claro" tamanho="lg">{CLIQUE_AGENDA.cta}</Botao>
+        <ul class="publico" aria-label="Para quem é">
+          {CLIQUE_AGENDA.publico.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    <div class="lado-celular">
+      <div class="celular" role="img" aria-label="Demonstração: cliente escolhe o serviço, o horário e recebe a confirmação no WhatsApp">
+        <div class="telas" data-clique-telas aria-hidden="true">
+          <!-- Tela 1: serviço -->
+          <div class="tela">
+            <p class="tela-topo">Barbearia do Léo</p>
+            <p class="tela-titulo">Escolha o serviço</p>
+            <div class="lista">
+              {
+                servicos.map((s, i) => (
+                  <div class:list={['servico', { marcado: i === 0 }]}>
+                    <Image src={s.foto} alt="" width={96} height={96} />
+                    <div>
+                      <strong>{s.nome}</strong>
+                      <small>{s.duracao}</small>
+                    </div>
+                    <em>{s.preco}</em>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+
+          <!-- Tela 2: horário -->
+          <div class="tela">
+            <p class="tela-topo">Corte degradê · 40 min</p>
+            <p class="tela-titulo">Escolha o horário</p>
+            <div class="dias">
+              {['Seg 3', 'Ter 4', 'Qua 5', 'Qui 6'].map((d, i) => <span class:list={{ marcado: i === 2 }}>{d}</span>)}
+            </div>
+            <div class="horarios">
+              {
+                horarios.map((h) => (
+                  <span class:list={{ ocupado: ocupados.has(h), marcado: h === escolhido }}>{h}</span>
+                ))
+              }
+            </div>
+            <div class="confirmar">Confirmar 14:10</div>
+          </div>
+
+          <!-- Tela 3: WhatsApp -->
+          <div class="tela zap">
+            <p class="zap-topo">Barbearia do Léo</p>
+            <div class="zap-msgs">
+              <div class="bolha">
+                ✅ <b>Agendamento confirmado!</b><br />Corte degradê · Qua, 5 · 14:10<br />Te esperamos 💈
+                <time>13:02</time>
+              </div>
+              <div class="bolha">
+                ⏰ Lembrete: seu horário é <b>amanhã às 14:10</b>. Responda 1 para confirmar.
+                <time>14:10</time>
+              </div>
+              <div class="bolha minha">1 <time>14:12</time></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .clique {
+    position: relative;
+    background:
+      radial-gradient(60% 50% at 80% 30%, rgb(18 99 241 / 0.28), transparent 70%),
+      radial-gradient(50% 40% at 10% 90%, rgb(111 177 255 / 0.12), transparent 70%),
+      var(--noite);
+    color: var(--texto-noite);
+    overflow: hidden;
+  }
+
+  .palco {
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: center;
+    gap: clamp(32px, 6vw, 96px);
+    padding-block: calc(var(--nav-altura) + 24px) 24px;
+  }
+
+  .lado-texto {
+    display: grid;
+    gap: 16px;
+  }
+
+  .logo {
+    width: 84px;
+    margin-left: -10px;
+    margin-bottom: -10px;
+  }
+
+  /* Cabe inteiro na tela enquanto a seção fica presa (pin) no desktop. */
+  .lado-texto .titulo-secao {
+    font-size: clamp(32px, 3.6vw, 50px);
+  }
+
+  /* Fundo preto do logo some no fundo escuro com "screen". */
+  .logo img {
+    mix-blend-mode: screen;
+  }
+
+  .etiqueta.claro {
+    color: var(--azul-ceu);
+  }
+
+  .titulo-secao .destaque {
+    color: var(--texto-noite-2);
+  }
+
+  .lead {
+    color: var(--texto-noite-2);
+    max-width: 54ch;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .passos {
+    list-style: none;
+    display: grid;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .passos li {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+    padding: 9px 14px;
+    border-radius: 14px;
+    transition:
+      background-color 0.5s var(--ease),
+      opacity 0.5s var(--ease);
+  }
+
+  :global(.motion) .passos li {
+    opacity: 0.35;
+  }
+
+  :global(.motion) .passos li.ativo {
+    opacity: 1;
+    background: rgb(255 255 255 / 0.06);
+  }
+
+  .passos span {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--azul);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .passos h3 {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .passos p {
+    font-size: 14px;
+    color: var(--texto-noite-2);
+  }
+
+  .rodape-texto {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .publico {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .publico li {
+    padding: 5px 12px;
+    border-radius: var(--raio-pilula);
+    border: 1px solid var(--noite-borda);
+    font-size: 12px;
+    color: var(--texto-noite-2);
+  }
+
+  /* ---------- celular ---------- */
+  .lado-celular {
+    display: grid;
+    place-items: center;
+  }
+
+  .celular {
+    width: min(340px, 100%);
+    height: min(660px, 78svh);
+    border-radius: 48px;
+    border: 10px solid #1b1f2a;
+    background: var(--branco);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.08),
+      0 60px 120px -30px rgb(18 99 241 / 0.55);
+    overflow: hidden;
+    color: var(--tinta);
+  }
+
+  .telas {
+    display: flex;
+    width: 300%;
+    height: 100%;
+    will-change: transform;
+  }
+
+  .tela {
+    width: calc(100% / 3);
+    height: 100%;
+    padding: 40px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .tela-topo {
+    font-size: 12px;
+    color: var(--tinta-3);
+  }
+
+  .tela-titulo {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .lista {
+    display: grid;
+    gap: 8px;
+  }
+
+  .servico {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1.5px solid #e6e8ee;
+    font-size: 14px;
+  }
+
+  .servico img {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  .servico small {
+    display: block;
+    color: var(--tinta-3);
+    font-size: 12px;
+  }
+
+  .servico em {
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .servico.marcado {
+    border-color: var(--azul);
+    background: var(--gelo);
+  }
+
+  .dias {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .dias span,
+  .horarios span {
+    padding: 10px 0;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 13px;
+    background: #f1f3f7;
+  }
+
+  .horarios {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .horarios .ocupado {
+    color: #b8bcc6;
+    text-decoration: line-through;
+    background: #f7f8fa;
+  }
+
+  .dias .marcado,
+  .horarios .marcado {
+    background: var(--azul);
+    color: var(--branco);
+    font-weight: 600;
+  }
+
+  .confirmar {
+    margin-top: auto;
+    padding: 14px;
+    border-radius: var(--raio-pilula);
+    text-align: center;
+    background: var(--tinta);
+    color: var(--branco);
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  .tela.zap {
+    padding: 0;
+    gap: 0;
+    background: #e9e3da;
+  }
+
+  .zap-topo {
+    padding: 40px 16px 12px;
+    background: #075e54;
+    color: var(--branco);
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .zap-msgs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .bolha {
+    max-width: 86%;
+    padding: 8px 10px 6px;
+    border-radius: 12px;
+    border-top-left-radius: 4px;
+    background: var(--branco);
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.08);
+  }
+
+  .bolha.minha {
+    align-self: flex-end;
+    background: #d9fdd3;
+    border-radius: 12px;
+    border-top-right-radius: 4px;
+  }
+
+  .bolha time {
+    display: block;
+    text-align: right;
+    font-size: 10px;
+    color: rgb(0 0 0 / 0.45);
+  }
+
+  @media (max-width: 900px) {
+    .palco {
+      grid-template-columns: 1fr;
+      padding-block: var(--secao);
+    }
+
+    .logo {
+      width: 88px;
+    }
+
+    .passos {
+      display: none;
+    }
+
+    .celular {
+      height: 600px;
+    }
+  }
+</style>

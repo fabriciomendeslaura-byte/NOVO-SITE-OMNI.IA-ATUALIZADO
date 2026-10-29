@@ -1,0 +1,154 @@
+---
+import { SECAO_FAQ, PERGUNTAS, linkWhatsApp } from '../content/site'
+
+/** FAQ estruturado: o Google e as IAs leem as respostas direto daqui. */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: PERGUNTAS.map((p) => ({
+    '@type': 'Question',
+    name: p.pergunta,
+    acceptedAnswer: { '@type': 'Answer', text: p.resposta },
+  })),
+}
+---
+
+<section id="faq" class="faq">
+  <div class="container estreito">
+    <div class="cabeca-secao">
+      <p class="etiqueta" data-revelar>{SECAO_FAQ.etiqueta}</p>
+      <h2 class="titulo-secao" data-revelar>{SECAO_FAQ.titulo}</h2>
+    </div>
+
+    <div class="lista">
+      {
+        PERGUNTAS.map((p) => (
+          <details data-revelar>
+            <summary>
+              {p.pergunta}
+              <span class="mais" aria-hidden="true" />
+            </summary>
+            <p>{p.resposta}</p>
+          </details>
+        ))
+      }
+    </div>
+
+    <p class="fecho" data-revelar>
+      Ficou alguma dúvida? <a href={linkWhatsApp('Olá! Tenho uma dúvida sobre a OMNI.IA.')} target="_blank" rel="noopener noreferrer">Fale com a gente no WhatsApp →</a>
+    </p>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</section>
+
+<style>
+  .faq {
+    background: var(--branco);
+    padding-block: var(--secao);
+  }
+
+  .estreito {
+    max-width: 860px;
+  }
+
+  .lista {
+    margin-top: clamp(40px, 6vw, 64px);
+    border-top: 1px solid var(--linha);
+  }
+
+  details {
+    border-bottom: 1px solid var(--linha);
+  }
+
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 0;
+    font-size: clamp(18px, 2vw, 21px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mais {
+    position: relative;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--canvas);
+    transition:
+      transform 0.4s var(--ease),
+      background-color 0.3s;
+  }
+
+  .mais::before,
+  .mais::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 11px;
+    height: 1.6px;
+    margin: -0.8px 0 0 -5.5px;
+    background: var(--tinta);
+    border-radius: 1px;
+  }
+
+  .mais::after {
+    transform: rotate(90deg);
+    transition: transform 0.4s var(--ease);
+  }
+
+  details[open] .mais {
+    background: var(--azul);
+    transform: rotate(180deg);
+  }
+
+  details[open] .mais::before,
+  details[open] .mais::after {
+    background: var(--branco);
+  }
+
+  details[open] .mais::after {
+    transform: rotate(0);
+  }
+
+  details p {
+    padding-bottom: 24px;
+    max-width: 68ch;
+    color: var(--tinta-2);
+  }
+
+  details[open] p {
+    animation: abrir 0.5s var(--ease);
+  }
+
+  @keyframes abrir {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  .fecho {
+    margin-top: 32px;
+    text-align: center;
+    color: var(--tinta-3);
+  }
+
+  .fecho a {
+    color: var(--azul-link);
+  }
+
+  .fecho a:hover {
+    text-decoration: underline;
+  }
+</style>

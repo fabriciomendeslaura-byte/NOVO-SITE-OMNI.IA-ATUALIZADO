@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro'
+import Nav from '../components/Nav.astro'
+import Rodape from '../components/Rodape.astro'
+import { PRIVACIDADE } from '../content/site'
+---
+
+<Base titulo="Política de Privacidade — OMNI.IA" descricao="Como a OMNI.IA trata os dados enviados pelo site, conforme a LGPD.">
+  <Nav />
+  <main id="conteudo" class="privacidade container">
+    <p class="etiqueta">LGPD · Lei 13.709/2018</p>
+    <h1 class="titulo-secao">{PRIVACIDADE.titulo}</h1>
+    {
+      PRIVACIDADE.blocos.map((b) => (
+        <section>
+          <h2>{b.titulo}</h2>
+          <p>{b.texto}</p>
+        </section>
+      ))
+    }
+    <a href="/" class="voltar">← Voltar ao site</a>
+  </main>
+  <Rodape />
+</Base>
+
+<style>
+  .privacidade {
+    max-width: 760px;
+    padding-block: calc(var(--nav-altura) + 80px) 96px;
+    display: grid;
+    gap: 28px;
+  }
+
+  h2 {
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+
+  p {
+    color: var(--tinta-2);
+  }
+
+  .voltar {
+    color: var(--azul-link);
+  }
+</style>

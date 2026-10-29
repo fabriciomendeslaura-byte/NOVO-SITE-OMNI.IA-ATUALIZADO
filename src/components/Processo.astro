@@ -1,0 +1,136 @@
+---
+import { SECAO_PROCESSO, PASSOS } from '../content/site'
+---
+
+<section id="processo" class="processo" data-processo>
+  <div class="container cabeca-secao">
+    <p class="etiqueta" data-revelar>{SECAO_PROCESSO.etiqueta}</p>
+    <h2 class="titulo-secao" data-revelar>
+      {SECAO_PROCESSO.titulo}
+      <span class="destaque">{SECAO_PROCESSO.tituloDestaque}</span>
+    </h2>
+  </div>
+
+  <div class="container-largo">
+    <ol class="passos">
+      <!-- A linha se desenha conforme o scroll, ligando um passo ao outro. -->
+      <svg class="linha" viewBox="0 0 1000 2" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="0" y1="1" x2="1000" y2="1" class="trilha" />
+        <line x1="0" y1="1" x2="1000" y2="1" class="tinta" data-processo-linha />
+      </svg>
+      {
+        PASSOS.map((p) => (
+          <li data-processo-passo>
+            <span class="bola">{p.codigo}</span>
+            <h3>{p.titulo}</h3>
+            <small>{p.duracao}</small>
+            <p>{p.descricao}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .processo {
+    background: var(--canvas);
+    padding-block: var(--secao);
+  }
+
+  .passos {
+    position: relative;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+    margin-top: clamp(56px, 8vw, 96px);
+  }
+
+  .linha {
+    position: absolute;
+    top: 27px;
+    left: 28px;
+    right: 28px;
+    width: calc(100% - 56px);
+    height: 2px;
+    overflow: visible;
+  }
+
+  .linha line {
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .trilha {
+    stroke: var(--linha);
+  }
+
+  .tinta {
+    stroke: var(--azul);
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+  }
+
+  :global(.motion) .tinta {
+    stroke-dashoffset: 1000;
+  }
+
+  li {
+    position: relative;
+    display: grid;
+    gap: 8px;
+    align-content: start;
+  }
+
+  .bola {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    margin-bottom: 14px;
+    background: var(--branco);
+    border: 1.5px solid var(--linha);
+    font-family: var(--fonte-mono);
+    font-size: 14px;
+    color: var(--azul);
+    transition:
+      background-color 0.5s,
+      color 0.5s,
+      border-color 0.5s;
+  }
+
+  li.ativo .bola {
+    background: var(--azul);
+    border-color: var(--azul);
+    color: var(--branco);
+  }
+
+  h3 {
+    font-size: var(--t-h3);
+    font-weight: 600;
+    letter-spacing: var(--tracking-titulo);
+  }
+
+  small {
+    font-size: 13px;
+    color: var(--azul);
+    font-weight: 500;
+  }
+
+  li p {
+    color: var(--tinta-3);
+    font-size: 16px;
+  }
+
+  @media (max-width: 800px) {
+    .passos {
+      grid-template-columns: 1fr;
+    }
+
+    .linha {
+      display: none;
+    }
+  }
+</style>

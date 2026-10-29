@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro'
+import Nav from '../components/Nav.astro'
+import Hero from '../components/Hero.astro'
+import Dia from '../components/Dia.astro'
+import Faixa from '../components/Faixa.astro'
+import Servicos from '../components/Servicos.astro'
+import Agente from '../components/Agente.astro'
+import Produtos from '../components/Produtos.astro'
+import OmniZap from '../components/OmniZap.astro'
+import CliqueAgenda from '../components/CliqueAgenda.astro'
+import Processo from '../components/Processo.astro'
+import Engenharia from '../components/Engenharia.astro'
+import Faq from '../components/Faq.astro'
+import Contato from '../components/Contato.astro'
+import Rodape from '../components/Rodape.astro'
+---
+
+<!--
+  O roteiro da página (a "história" contada pelo scroll):
+  1. Hero ......... o mascote chega, a câmera aproxima, o Rio aparece
+  2. Um dia ....... relógio corre 06h→24h e os agentes fazem a rotina
+  3. Serviços ..... o que construímos, andando na horizontal
+  4. Agente ....... a prova: uma conversa real acontecendo
+  5. Produtos ..... a virada: "e construímos os nossos"
+  6. OmniZap ...... produto 1
+  7. Clique Agenda  produto 2
+  8. Processo ..... como começar
+  9. Engenharia ... por que confiar
+  10. FAQ + Contato  a conversão
+-->
+<Base>
+  <Nav />
+  <main id="conteudo">
+    <Hero />
+    <Dia />
+    <Faixa />
+    <Servicos />
+    <Agente />
+    <Produtos />
+    <OmniZap />
+    <CliqueAgenda />
+    <Processo />
+    <Engenharia />
+    <Faq />
+    <Contato />
+  </main>
+  <Rodape />
+</Base>
+
+<script>
+  import { iniciarMotion } from '../scripts/motion'
+  iniciarMotion()
+</script>

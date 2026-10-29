@@ -1,0 +1,121 @@
+---
+/**
+ * Botão em pílula. Um único botão "cheio" por cena — o azul é o pedido de ação.
+ * `contorno` é o companheiro secundário; `claro` serve sobre fundo escuro.
+ */
+interface Props {
+  href: string
+  variante?: 'cheio' | 'contorno' | 'claro' | 'contorno-claro'
+  tamanho?: 'md' | 'lg'
+  externo?: boolean
+  class?: string
+}
+
+const { href, variante = 'cheio', tamanho = 'md', externo = false, class: classe = '' } = Astro.props
+const atributosExternos = externo ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+---
+
+<a href={href} class:list={['botao', variante, tamanho, classe]} {...atributosExternos}>
+  <span><slot /></span>
+  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" /></svg>
+</a>
+
+<style>
+  .botao {
+    --fundo: var(--azul);
+    --cor: var(--branco);
+    --borda: transparent;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 22px;
+    border-radius: var(--raio-pilula);
+    background: var(--fundo);
+    color: var(--cor);
+    border: 1px solid var(--borda);
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      transform 0.4s var(--ease),
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .lg {
+    padding: 15px 28px;
+    font-size: 17px;
+  }
+
+  /* Brilho que atravessa o botão no hover. */
+  .botao::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.8s var(--ease);
+  }
+
+  .botao:hover::after {
+    transform: translateX(120%);
+  }
+
+  .botao:hover {
+    transform: translateY(-1px);
+  }
+
+  .botao:active {
+    transform: scale(0.97);
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .botao:hover svg {
+    transform: translateX(3px);
+  }
+
+  .cheio:hover {
+    --fundo: #0a52d6;
+  }
+
+  .contorno {
+    --fundo: transparent;
+    --cor: var(--azul-link);
+    --borda: var(--azul-link);
+  }
+
+  .contorno:hover {
+    --fundo: var(--azul-link);
+    --cor: var(--branco);
+  }
+
+  .claro {
+    --fundo: var(--branco);
+    --cor: var(--tinta);
+  }
+
+  .contorno-claro {
+    --fundo: transparent;
+    --cor: var(--branco);
+    --borda: rgb(255 255 255 / 0.4);
+  }
+
+  .contorno-claro:hover {
+    --fundo: var(--branco);
+    --cor: var(--tinta);
+  }
+</style>

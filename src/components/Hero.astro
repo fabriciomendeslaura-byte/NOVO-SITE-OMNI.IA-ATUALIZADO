@@ -1,0 +1,314 @@
+---
+import { getImage } from 'astro:assets'
+import Botao from './Botao.astro'
+import { HERO } from '../content/site'
+import bannerDesktop from '../assets/banners/hero-desktop.png'
+import bannerMobile from '../assets/banners/hero-mobile.png'
+
+/*
+ * <picture> com arte diferente por tela: o banner de celular é vertical, o de
+ * site é horizontal. O navegador baixa SÓ o que vai mostrar.
+ */
+const desktopAvif = await getImage({ src: bannerDesktop, format: 'avif', width: 1671, quality: 80 })
+const desktopWebp = await getImage({ src: bannerDesktop, format: 'webp', width: 1671, quality: 90 })
+const mobileAvif = await getImage({ src: bannerMobile, format: 'avif', width: 940, quality: 80 })
+const mobileWebp = await getImage({ src: bannerMobile, format: 'webp', width: 940, quality: 90 })
+
+const palavras = HERO.titulo.split(' ')
+const destaque = HERO.tituloDestaque.split(' ')
+---
+
+<section id="topo" class="hero" data-hero>
+  <div class="palco" data-hero-palco>
+    <div class="cena1" data-hero-cena1>
+      <!--
+        Fundo em camadas, igual ao hero do site oficial (adaptado ao tema claro):
+        1. grade      — linhas finas que somem para baixo
+        2. grade-luz  — as mesmas linhas, mais fortes, só onde o mouse está
+        3. luz        — brilho azul difuso que segue o cursor
+      -->
+      <div class="fundo grade" aria-hidden="true"></div>
+      <div class="fundo grade-luz" aria-hidden="true"></div>
+      <div class="fundo luz" aria-hidden="true"></div>
+
+      <div class="texto container" data-hero-texto>
+        <p class="etiqueta" data-hero-entrada>{HERO.etiqueta}</p>
+        <h1 class="titulo">
+          {palavras.map((p) => <span class="palavra"><span data-hero-palavra>{p}</span></span>)}
+          <br />
+          {destaque.map((p) => <span class="palavra"><span class="texto-azul" data-hero-palavra>{p}</span></span>)}
+        </h1>
+        <p class="sub" data-hero-entrada>{HERO.subtitulo}</p>
+        <div class="acoes" data-hero-entrada>
+          <Botao href="#contato" tamanho="lg">{HERO.ctaPrimario}</Botao>
+          <Botao href="#servicos" variante="contorno" tamanho="lg">{HERO.ctaSecundario}</Botao>
+        </div>
+      </div>
+
+      <picture class="banner" data-hero-banner>
+        <source media="(max-width: 760px)" srcset={mobileAvif.src} type="image/avif" />
+        <source media="(max-width: 760px)" srcset={mobileWebp.src} type="image/webp" />
+        <source srcset={desktopAvif.src} type="image/avif" />
+        <img
+          src={desktopWebp.src}
+          alt="Mascote da OMNI.IA, um alienígena azul de terno, trabalhando no notebook sentado sobre as letras 3D OMNIAI"
+          width="1671"
+          height="941"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
+
+      <div class="rolar" aria-hidden="true" data-hero-entrada>
+        <span></span>
+        Role para conhecer
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    background: var(--canvas);
+  }
+
+  .palco {
+    position: relative;
+    height: 100svh;
+    min-height: 620px;
+    overflow: hidden;
+  }
+
+  .cena1 {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Desktop: texto em cima, mascote ocupa exatamente o espaço que sobrar. */
+  .cena1 {
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    /* Degradê azul-gelo no topo, dissolvendo no canvas onde o banner começa. */
+    background: linear-gradient(180deg, #e6efff 0%, #eef3fc 28%, var(--canvas) 62%);
+  }
+
+  .fundo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* As linhas nascem no topo e somem suavemente antes do mascote. */
+  .grade {
+    background-image:
+      linear-gradient(to right, rgb(18 99 241 / 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(18 99 241 / 0.07) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: center top;
+    -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 0%, #000 45%, transparent 100%);
+    mask-image: radial-gradient(ellipse 90% 75% at 50% 0%, #000 45%, transparent 100%);
+  }
+
+  /*
+   * A mesma grade, bem mais forte, recortada por um círculo que segue o mouse.
+   * Ela já está desenhada o tempo todo — a máscara só escolhe o pedaço visível,
+   * por isso mover o mouse não custa nada. Sem mouse, o -100% esconde o efeito.
+   */
+  .grade-luz {
+    background-image:
+      linear-gradient(to right, rgb(18 99 241 / 0.28) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(18 99 241 / 0.28) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: center top;
+    -webkit-mask-image: radial-gradient(260px circle at var(--mx, -100%) var(--my, -100%), #000 0%, rgb(0 0 0 / 0.35) 45%, transparent 75%);
+    mask-image: radial-gradient(260px circle at var(--mx, -100%) var(--my, -100%), #000 0%, rgb(0 0 0 / 0.35) 45%, transparent 75%);
+  }
+
+  /* Núcleo + halo: um gradiente só pareceria um adesivo redondo. */
+  .luz {
+    background:
+      radial-gradient(340px circle at var(--mx, 50%) var(--my, 22%), rgb(18 99 241 / 0.13), transparent 70%),
+      radial-gradient(680px circle at var(--mx, 50%) var(--my, 22%), rgb(61 139 255 / 0.08), transparent 65%);
+  }
+
+  .texto {
+    position: relative;
+    z-index: 2;
+    flex: none;
+    padding-top: calc(var(--nav-altura) + clamp(20px, 4.5vh, 56px));
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .titulo {
+    font-size: clamp(38px, 5.2vw, 76px);
+    font-weight: 600;
+    line-height: 1.03;
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* Cada palavra sobe de dentro de uma "janela" — o efeito de texto revelado. */
+  .palavra {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+
+  .palavra > span {
+    display: inline-block;
+  }
+
+  /* Estado inicial da abertura (o JS anima até o lugar). */
+  :global(.motion) .palavra > span {
+    transform: translateY(115%);
+  }
+
+  :global(.motion) [data-hero-entrada],
+  :global(.motion) .banner img {
+    opacity: 0;
+  }
+
+  .palavra + .palavra {
+    margin-left: 0.24em;
+  }
+
+  .sub {
+    max-width: 640px;
+    font-size: var(--t-sub);
+    line-height: 1.4;
+    color: var(--tinta-2);
+  }
+
+  .acoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .banner {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    transform-origin: 60% 75%;
+    will-change: transform;
+  }
+
+  /*
+   * O banner tem o mesmo #f5f5f7 da página. A máscara apaga a emenda das
+   * bordas — por isso a <img> tem o tamanho exato da imagem (sem contain).
+   */
+  .banner img {
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #000 14%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #000 14%);
+    mask-composite: intersect;
+  }
+
+  .rolar {
+    position: absolute;
+    left: var(--gutter);
+    bottom: 28px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--tinta-3);
+  }
+
+  .rolar span {
+    width: 22px;
+    height: 34px;
+    border: 1.5px solid currentColor;
+    border-radius: 12px;
+    position: relative;
+  }
+
+  .rolar span::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 7px;
+    width: 3px;
+    height: 7px;
+    margin-left: -1.5px;
+    border-radius: 2px;
+    background: currentColor;
+    animation: rolar 1.8s var(--ease) infinite;
+  }
+
+  @keyframes rolar {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    70% {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .texto {
+      gap: 14px;
+    }
+
+    .sub,
+    .acoes :global(.contorno) {
+      display: none;
+    }
+
+    /* Celular: banner vertical por trás; o branco de cima dele fica sob o texto. */
+    .banner {
+      position: absolute;
+      inset: auto 0 -5svh;
+      display: block;
+      transform-origin: 50% 55%;
+    }
+
+    .banner img {
+      width: 100%;
+      height: auto;
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 85%, transparent 100%);
+      mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 85%, transparent 100%);
+    }
+
+    .rolar {
+      display: none;
+    }
+
+
+
+  }
+
+  @media (max-height: 700px) and (min-width: 761px) {
+    .sub {
+      display: none;
+    }
+  }
+</style>

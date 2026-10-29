@@ -1,0 +1,65 @@
+/**
+ * Design tokens — referência "galeria em luz do dia" (estilo Apple),
+ * adaptada à marca OMNI.IA.
+ *
+ * Adaptações conscientes:
+ * - Fonte: SF Pro é licenciada da Apple → Inter Variable (mesmo desenho, livre).
+ * - Azul de ação puxado para o azul do mascote, para botão e banner parecerem
+ *   da mesma marca.
+ * - Uma faixa escura em azul-noite (o terno do mascote) no lugar do preto puro.
+ */
+:root {
+  /* Superfícies */
+  --canvas: #f5f5f7;
+  --branco: #ffffff;
+  --gelo: #e8f1fd;
+  --gelo-forte: #aad0f6;
+  --noite: #070b1a;
+  --noite-2: #0d1430;
+  --noite-borda: rgb(255 255 255 / 0.09);
+
+  /* Texto */
+  --tinta: #1d1d1f;
+  --tinta-2: #424245;
+  --tinta-3: #6e6e73;
+  --linha: #d2d2d7;
+  --texto-noite: #f5f5f7;
+  --texto-noite-2: #a1a6b4;
+
+  /* Marca */
+  --azul: #1263f1;          /* ação principal — tom do mascote */
+  --azul-link: #0b57d0;
+  --azul-claro: #3d8bff;
+  --azul-ceu: #6fb1ff;
+  --azul-profundo: #1d3fa8; /* letras 3D "OMNIAI" */
+  --verde-zap: #25d366;
+
+  /* Tipografia */
+  --fonte: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --fonte-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --t-legenda: 12px;
+  --t-pequeno: 14px;
+  --t-corpo: 17px;
+  --t-sub: clamp(19px, 1.6vw, 21px);
+  --t-h3: clamp(22px, 2.2vw, 28px);
+  --t-h2: clamp(34px, 4.6vw, 56px);
+  --t-display: clamp(42px, 7vw, 96px);
+  --t-gigante: clamp(64px, 16vw, 240px);
+
+  --tracking-display: -0.025em;
+  --tracking-titulo: -0.02em;
+  --tracking-corpo: -0.022em;
+
+  /* Espaço e forma */
+  --max: 1080px;
+  --max-largo: 1320px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --secao: clamp(80px, 10vw, 136px);
+  --raio-pilula: 980px;
+  --raio-card: 28px;
+  --raio-sm: 14px;
+
+  --nav-altura: 52px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}

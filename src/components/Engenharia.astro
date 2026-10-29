@@ -1,0 +1,224 @@
+---
+import { SECAO_ENGENHARIA, PILARES, TERMINAL } from '../content/site'
+---
+
+<section id="engenharia" class="engenharia" data-engenharia data-holofote data-tema="escuro">
+  <div class="container-largo grade">
+    <div class="texto">
+      <p class="etiqueta claro" data-revelar>{SECAO_ENGENHARIA.etiqueta}</p>
+      <h2 class="titulo-secao" data-revelar>
+        {SECAO_ENGENHARIA.titulo}
+        <span class="destaque">{SECAO_ENGENHARIA.tituloDestaque}</span>
+      </h2>
+      <p class="lead" data-revelar>{SECAO_ENGENHARIA.descricao}</p>
+    </div>
+
+    <div class="terminal" data-terminal aria-label="Exemplo de implantação de um projeto" role="img">
+      <div class="barra"><i></i><i></i><i></i><span>~/omni — deploy</span></div>
+      <pre aria-hidden="true">{
+        TERMINAL.map((l) => (
+          <code class={l.tipo} data-terminal-linha data-texto={(l.tipo === 'cmd' ? '$ ' : '') + l.texto}>{(l.tipo === 'cmd' ? '$ ' : '') + l.texto}</code>
+        ))
+      }<span class="cursor" data-terminal-cursor></span></pre>
+    </div>
+  </div>
+
+  <div class="container-largo">
+    <ul class="pilares">
+      {
+        PILARES.map((p) => (
+          <li data-pilar>
+            <span class="codigo">{p.codigo}</span>
+            <h3>{p.titulo}</h3>
+            <p>{p.descricao}</p>
+            <small>{p.marcador}</small>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .engenharia {
+    position: relative;
+    background:
+      radial-gradient(50% 40% at 15% 10%, rgb(18 99 241 / 0.25), transparent 70%),
+      var(--noite);
+    color: var(--texto-noite);
+    padding-block: var(--secao);
+    overflow: hidden;
+  }
+
+  /* Grade de pontos discreta — textura de "planta técnica". */
+  .engenharia::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+    -webkit-mask-image: linear-gradient(180deg, #000, transparent 80%);
+    mask-image: linear-gradient(180deg, #000, transparent 80%);
+    pointer-events: none;
+  }
+
+  .grade {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+
+  .texto {
+    display: grid;
+    gap: 18px;
+  }
+
+  .etiqueta.claro {
+    color: var(--azul-ceu);
+  }
+
+  .titulo-secao .destaque {
+    color: var(--texto-noite-2);
+  }
+
+  .lead {
+    color: var(--texto-noite-2);
+  }
+
+  .terminal {
+    border-radius: 18px;
+    background: #0b1022;
+    border: 1px solid var(--noite-borda);
+    box-shadow: 0 40px 80px -30px rgb(18 99 241 / 0.45);
+    overflow: hidden;
+  }
+
+  .barra {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--noite-borda);
+  }
+
+  .barra i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #2a3150;
+  }
+
+  .barra span {
+    margin-left: auto;
+    margin-right: auto;
+    font-family: var(--fonte-mono);
+    font-size: 12px;
+    color: var(--texto-noite-2);
+  }
+
+  pre {
+    display: grid;
+    gap: 6px;
+    padding: 22px;
+    min-height: 260px;
+    font-family: var(--fonte-mono);
+    font-size: clamp(12px, 1.2vw, 14px);
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  code {
+    color: #c9d1e6;
+    min-height: 1.6em;
+  }
+
+  code.ok {
+    color: #5ee39a;
+  }
+
+  code.info {
+    color: var(--azul-ceu);
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: var(--azul-ceu);
+    animation: piscar 1s steps(2) infinite;
+  }
+
+  @keyframes piscar {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .pilares {
+    position: relative;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: clamp(56px, 8vw, 104px);
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--noite-borda);
+  }
+
+  .pilares li {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 28px 24px;
+    background: var(--noite-2);
+    transition: background-color 0.4s;
+  }
+
+  .pilares li:hover {
+    background: #121b3e;
+  }
+
+  .codigo {
+    font-family: var(--fonte-mono);
+    font-size: 12px;
+    color: var(--azul-ceu);
+  }
+
+  .pilares h3 {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+
+  .pilares p {
+    font-size: 15px;
+    color: var(--texto-noite-2);
+  }
+
+  .pilares small {
+    margin-top: 6px;
+    font-family: var(--fonte-mono);
+    font-size: 11px;
+    color: #7c84a0;
+  }
+
+  @media (max-width: 1000px) {
+    .grade {
+      grid-template-columns: 1fr;
+    }
+
+    .pilares {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .pilares {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

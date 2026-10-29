@@ -1,0 +1,399 @@
+---
+import { getImage } from 'astro:assets'
+import { SECAO_CONTATO, FATURAMENTOS, VOLUMES_LEADS, INTERESSES, EMPRESA, linkWhatsApp } from '../content/site'
+import escritorio from '../assets/banners/escritorio-rio.png'
+
+const fundo = await getImage({ src: escritorio, format: 'webp', width: 1600, quality: 70 })
+---
+
+<section id="contato" class="contato" data-tema="escuro" style={`--fundo: url(${fundo.src})`}>
+  <div class="container-largo grade">
+    <div class="texto">
+      <p class="etiqueta claro" data-revelar>{SECAO_CONTATO.etiqueta}</p>
+      <h2 class="titulo-secao" data-revelar>
+        {SECAO_CONTATO.titulo}
+        <span class="destaque">{SECAO_CONTATO.tituloDestaque}</span>
+      </h2>
+      <p class="lead" data-revelar>{SECAO_CONTATO.descricao}</p>
+      <ul class="garantias" data-revelar>
+        {SECAO_CONTATO.garantias.map((g) => <li>{g}</li>)}
+      </ul>
+      <p class="alternativa" data-revelar>
+        Prefere conversar direto?
+        <a href={linkWhatsApp()} target="_blank" rel="noopener noreferrer">WhatsApp {EMPRESA.whatsappExibicao}</a>
+      </p>
+    </div>
+
+    <div class="cartao" data-revelar>
+      <form data-form novalidate>
+        <div class="linha">
+          <label>
+            <span>Nome completo</span>
+            <input name="nome" autocomplete="name" required maxlength="120" />
+            <em data-erro-de="nome" aria-live="polite"></em>
+          </label>
+          <label>
+            <span>E-mail</span>
+            <input name="email" type="email" autocomplete="email" required maxlength="160" />
+            <em data-erro-de="email" aria-live="polite"></em>
+          </label>
+        </div>
+        <div class="linha">
+          <label>
+            <span>WhatsApp</span>
+            <input name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" placeholder="(21) 99999-9999" required />
+            <em data-erro-de="whatsapp" aria-live="polite"></em>
+          </label>
+          <label>
+            <span>Empresa</span>
+            <input name="empresa" autocomplete="organization" required maxlength="120" />
+            <em data-erro-de="empresa" aria-live="polite"></em>
+          </label>
+        </div>
+        <label>
+          <span>Site ou LinkedIn <small>(opcional)</small></span>
+          <input name="site" maxlength="200" />
+        </label>
+        <div class="linha">
+          <label>
+            <span>Faturamento <small>(opcional)</small></span>
+            <select name="faturamento">
+              <option value="">Selecione</option>
+              {FATURAMENTOS.map((f) => <option>{f}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>Leads por dia <small>(opcional)</small></span>
+            <select name="leads">
+              <option value="">Selecione</option>
+              {VOLUMES_LEADS.map((v) => <option>{v}</option>)}
+            </select>
+          </label>
+        </div>
+        <label>
+          <span>O que você procura</span>
+          <select name="interesse" required>
+            <option value="">Selecione</option>
+            {INTERESSES.map((i) => <option>{i}</option>)}
+          </select>
+          <em data-erro-de="interesse" aria-live="polite"></em>
+        </label>
+        <label>
+          <span>Como sua operação funciona hoje?</span>
+          <textarea name="mensagem" rows="4" maxlength="2000" required placeholder="Ex.: hoje a gente monta o relatório na mão toda segunda…"></textarea>
+          <em data-erro-de="mensagem" aria-live="polite"></em>
+        </label>
+
+        <!-- Honeypot: invisível para pessoas, irresistível para robôs. -->
+        <label class="armadilha" aria-hidden="true">
+          Não preencha <input name="armadilha" tabindex="-1" autocomplete="off" />
+        </label>
+
+        <label class="consentimento">
+          <input type="checkbox" name="consentimento" />
+          <span>
+            Autorizo a OMNI.IA a usar estes dados para responder ao meu pedido, conforme a{' '}
+            <a href="/privacidade" target="_blank">Política de Privacidade</a>.
+          </span>
+        </label>
+        <em data-erro-de="consentimento" aria-live="polite"></em>
+
+        <button type="submit" data-enviando={SECAO_CONTATO.botaoEnviando}>
+          <span>{SECAO_CONTATO.botao}</span>
+        </button>
+        <p class="erro-geral" data-form-erro hidden role="alert">{SECAO_CONTATO.erroTexto}</p>
+      </form>
+
+      <div class="sucesso" data-form-sucesso hidden tabindex="-1">
+        <span class="check" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg>
+        </span>
+        <h3>{SECAO_CONTATO.sucessoTitulo}</h3>
+        <p>{SECAO_CONTATO.sucessoTexto}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { iniciarFormulario } from '../scripts/formulario'
+  iniciarFormulario()
+</script>
+
+<style>
+  .contato {
+    position: relative;
+    padding-block: var(--secao);
+    color: var(--branco);
+    background:
+      linear-gradient(90deg, rgb(4 14 40 / 0.92) 0%, rgb(4 14 40 / 0.75) 45%, rgb(4 14 40 / 0.45) 100%),
+      var(--fundo) center / cover no-repeat,
+      var(--noite);
+    overflow: hidden;
+  }
+
+  .grade {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+
+  .texto {
+    display: grid;
+    gap: 18px;
+    position: sticky;
+    top: calc(var(--nav-altura) + 40px);
+  }
+
+  .etiqueta.claro {
+    color: var(--azul-ceu);
+  }
+
+  .titulo-secao .destaque {
+    color: rgb(255 255 255 / 0.65);
+  }
+
+  .lead {
+    color: rgb(255 255 255 / 0.78);
+  }
+
+  .garantias {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .garantias li {
+    padding: 6px 14px;
+    border-radius: var(--raio-pilula);
+    background: rgb(255 255 255 / 0.1);
+    border: 1px solid rgb(255 255 255 / 0.16);
+    font-size: 13px;
+  }
+
+  .alternativa {
+    font-size: 15px;
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  .alternativa a {
+    color: var(--azul-ceu);
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  .alternativa a:hover {
+    text-decoration: underline;
+  }
+
+  .cartao {
+    padding: clamp(24px, 3.4vw, 40px);
+    border-radius: var(--raio-card);
+    background: rgb(255 255 255 / 0.96);
+    color: var(--tinta);
+    box-shadow: 0 40px 100px -30px rgb(0 0 0 / 0.5);
+  }
+
+  form {
+    display: grid;
+    gap: 14px;
+  }
+
+  .linha {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  label {
+    display: grid;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--tinta-2);
+  }
+
+  label small {
+    font-weight: 400;
+    color: var(--tinta-3);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--linha);
+    background: var(--branco);
+    font-size: 16px;
+    color: var(--tinta);
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 110px;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 4px rgb(18 99 241 / 0.15);
+  }
+
+  [aria-invalid='true'] {
+    border-color: #d93025;
+  }
+
+  em {
+    font-style: normal;
+    font-size: 12px;
+    color: #d93025;
+    min-height: 0;
+  }
+
+  em:empty {
+    display: none;
+  }
+
+  .armadilha {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .consentimento {
+    grid-template-columns: 20px 1fr;
+    align-items: start;
+    gap: 10px;
+    font-weight: 400;
+    color: var(--tinta-3);
+  }
+
+  .consentimento input {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    margin-top: 1px;
+    accent-color: var(--azul);
+  }
+
+  .consentimento a {
+    color: var(--azul-link);
+    text-decoration: underline;
+  }
+
+  button {
+    margin-top: 6px;
+    padding: 16px 24px;
+    border: 0;
+    border-radius: var(--raio-pilula);
+    background: var(--azul);
+    color: var(--branco);
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      transform 0.3s var(--ease);
+  }
+
+  button:hover {
+    background: #0a52d6;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  button:disabled {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .erro-geral {
+    font-size: 14px;
+    color: #d93025;
+  }
+
+  .sucesso {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 14px;
+    padding: 40px 8px;
+  }
+
+  .sucesso[hidden] {
+    display: none;
+  }
+
+  .check {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--azul);
+  }
+
+  .check svg {
+    width: 30px;
+    fill: none;
+    stroke: var(--branco);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 24;
+    animation: tracar 0.8s 0.2s var(--ease) both;
+  }
+
+  @keyframes tracar {
+    from {
+      stroke-dashoffset: 24;
+    }
+  }
+
+  .sucesso h3 {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .sucesso p {
+    color: var(--tinta-2);
+    max-width: 44ch;
+  }
+
+  @media (max-width: 900px) {
+    .grade {
+      grid-template-columns: 1fr;
+    }
+
+    .texto {
+      position: static;
+    }
+
+    .contato {
+      background:
+        linear-gradient(180deg, rgb(4 14 40 / 0.9), rgb(4 14 40 / 0.95)),
+        var(--fundo) center / cover no-repeat,
+        var(--noite);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .linha {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
