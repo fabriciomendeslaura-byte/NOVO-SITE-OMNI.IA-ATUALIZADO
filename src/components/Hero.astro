@@ -283,19 +283,26 @@ const destaque = HERO.tituloDestaque.split(' ')
       display: none;
     }
 
-    /* Celular: banner vertical por trás; o branco de cima dele fica sob o texto. */
+    /*
+     * Celular: o banner começa SEMPRE abaixo do botão e ocupa só o espaço que
+     * sobra. Antes ele era ancorado no fundo da tela — em celular mais baixo
+     * subia e o botão ficava em cima do ET.
+     * `cover` corta o branco de cima da imagem vertical; o 40% de posição
+     * mantém ET + letras inteiros em telas de ~600 a ~900px de altura.
+     */
     .banner {
-      position: absolute;
-      inset: auto 0 -5svh;
-      display: block;
-      transform-origin: 50% 55%;
+      margin-top: 8px;
+      transform-origin: 50% 60%;
     }
 
     .banner img {
       width: 100%;
-      height: auto;
-      -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 85%, transparent 100%);
-      mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 85%, transparent 100%);
+      height: 100%;
+      max-width: none;
+      object-fit: cover;
+      object-position: 50% 62%;
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 88%, transparent 100%);
+      mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 88%, transparent 100%);
     }
 
     .rolar {
